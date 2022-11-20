@@ -10,6 +10,7 @@ export const NavLinks = ({ handleClick }) => (
   <div className="mt-10">
     {links.map((link) => (
       <NavLink
+        end
         key={link.name}
         to={link.to}
         onClick={() => handleClick && handleClick()}
