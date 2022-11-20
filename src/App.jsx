@@ -1,8 +1,16 @@
+import React, {Suspense} from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
-import { Searchbar, Sidebar, MusicPlayer, TopPlay } from './components';
-import { ArtistDetails, TopArtists, AroundYou, Discover, Search, SongDetails, TopCharts } from './pages';
+import { Searchbar, Sidebar, MusicPlayer, TopPlay, Loader } from './components';
+
+const Discover = React.lazy(() => import('./pages/Discover'));
+const TopArtists = React.lazy(() => import('./pages/TopArtists'));
+const TopCharts = React.lazy(() => import('./pages/TopCharts'));
+const AroundYou = React.lazy(() => import('./pages/AroundYou'));
+const ArtistDetails = React.lazy(() => import('./pages/ArtistDetails'));
+const Search = React.lazy(() => import('./pages/Search'));
+const SongDetails = React.lazy(() => import('./pages/SongDetails'));
 
 const App = () => {
   const { activeSong } = useSelector((state) => state.player);
@@ -15,15 +23,17 @@ const App = () => {
 
         <div className="px-6 h-[calc(100vh-72px)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
           <div className="flex-1 h-fit pb-40">
-            <Routes>
-              <Route path="/" element={<Discover />} />
-              <Route path="/top-artists" element={<TopArtists />} />
-              <Route path="/top-charts" element={<TopCharts />} />
-              <Route path="/around-you" element={<AroundYou />} />
-              <Route path="/artists/:id" element={<ArtistDetails />} />
-              <Route path="/songs/:songid" element={<SongDetails />} />
-              <Route path="/search/:searchTerm" element={<Search />} />
-            </Routes>
+            <Suspense fallback={<Loader/>}>
+              <Routes>
+                <Route path="/" element={<Discover />} />
+                <Route path="/top-artists" element={<TopArtists />} />
+                <Route path="/top-charts" element={<TopCharts />} />
+                <Route path="/around-you" element={<AroundYou />} />
+                <Route path="/artists/:id" element={<ArtistDetails />} />
+                <Route path="/songs/:songid" element={<SongDetails />} />
+                <Route path="/search/:searchTerm" element={<Search />} />
+              </Routes>
+            </Suspense>
           </div>
           <div className="xl:sticky relative top-0 h-fit">
             <TopPlay />
